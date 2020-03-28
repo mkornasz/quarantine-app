@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class QuarantineappApplication {
+public class QuarantineAppApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(QuarantineappApplication.class, args);
+		SpringApplication.run(QuarantineAppApplication.class, args);
 	}
 
 }
