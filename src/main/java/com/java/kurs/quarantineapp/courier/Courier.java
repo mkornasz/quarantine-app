@@ -1,15 +1,13 @@
 package com.java.kurs.quarantineapp.courier;
 
+import com.java.kurs.quarantineapp.order.Order;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Date;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "couriers")
@@ -24,4 +22,9 @@ public class Courier {
     private Integer capacity;
     private String name;
     private String surname;
+    private String phone;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "courierId")
+    private List<Order> orders;
 }

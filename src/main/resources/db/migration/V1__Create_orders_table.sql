@@ -1,7 +1,10 @@
 create table orders (
     id int primary key auto_increment,
-    clientId int,
-    courierId int,
-    routeLength int,
-    orderDate date
+    status varchar(20),
+    order_date date,
+    delivery_date date,
+    route_length int,
+    client_name varchar(40),
+    client_phone varchar(40),
+    courier_id int
 );

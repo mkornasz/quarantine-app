@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.Date;
 
 import lombok.NoArgsConstructor;
@@ -22,8 +23,11 @@ public class Order {
     @GeneratedValue(generator = "inc")
     @GenericGenerator(name = "inc", strategy = "increment")
     private Integer id;
-    private Integer clientId;
     private Integer courierId;
     private Integer routeLength;
     private Date orderDate;
+    private LocalDate deliveryDate;
+    private String clientName ;
+    private String clientPhone;
+    private String status;
 }
