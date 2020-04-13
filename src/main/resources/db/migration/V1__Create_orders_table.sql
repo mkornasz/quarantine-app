@@ -1,7 +1,7 @@
 create table orders (
     id int primary key auto_increment,
     status varchar(20),
-    order_date date,
+    order_date timestamp,
     delivery_date date,
     route_length int,
     client_name varchar(40),

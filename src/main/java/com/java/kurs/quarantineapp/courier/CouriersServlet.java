@@ -21,7 +21,7 @@ class CouriersServlet {
     }
 
     @GetMapping
-    ResponseEntity<List<Courier>> findAllCouriers() {
+    ResponseEntity<List<CourierDTO>> findAllCouriers() {
         logger.info("Got findAllCouriers request");
         return ResponseEntity.ok(service.findAllCouriers());
     }

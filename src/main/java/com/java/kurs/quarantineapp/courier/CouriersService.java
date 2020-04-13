@@ -8,6 +8,10 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class CouriersService {
@@ -19,9 +23,14 @@ public class CouriersService {
         this.repository = repository;
     }
 
-    List<Courier> findAllCouriers() {
+
+    List<CourierDTO> findAllCouriers() {
         logger.info("Got findAllCouriers request");
-        return repository.findAll();
+        return repository
+                .findAll()
+                .stream()
+                .map(CourierDTO::new)
+                .collect(toList());
     }
 
     Long getCouriersCount() {
@@ -34,6 +43,7 @@ public class CouriersService {
     }
 
     Optional<Integer> assignCourier(LocalDate deliveryDate, Integer routeLength){
+        Random rand = new Random();
         var couriersCapacity = repository.findAll();
         couriersCapacity.forEach(c->{
             int sum = c.getOrders().stream().
@@ -41,7 +51,17 @@ public class CouriersService {
                     mapToInt(j->j.getRouteLength()).sum();
             c.setCapacity(c.getCapacity()-sum);
         });
-        var courier = couriersCapacity.stream().max(Comparator.comparing(c->c.getCapacity())).get();
-        return courier.getCapacity()-routeLength>=0 ? Optional.of(courier.getId()): Optional.empty();
+
+// Always assign in the same order:
+//        var courier = couriersCapacity.stream().max(Comparator.comparing(c->c.getCapacity())).get();
+//        return courier.getCapacity()-routeLength>=0 ? Optional.of(courier.getId()): Optional.empty();
+
+        var maxCapacity = couriersCapacity.stream().max(Comparator.comparing(c->c.getCapacity()));
+        if(maxCapacity.isEmpty() || maxCapacity.get().getCapacity() -routeLength<=0)
+            return Optional.empty();
+
+        var couriers = couriersCapacity.stream().
+                filter(c -> c.getCapacity().equals(maxCapacity.get().getCapacity())).collect(Collectors.toList());
+        return  Optional.of(couriers.get(rand.nextInt(couriers.size())).getId());
     }
 }
