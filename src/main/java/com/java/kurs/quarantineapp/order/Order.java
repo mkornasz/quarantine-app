@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class Order {
     private Integer id;
     private Integer courierId;
     private Integer routeLength;
-    private Date orderDate;
+    private LocalDateTime orderDate;
     private LocalDate deliveryDate;
     private String clientName ;
     private String clientPhone;

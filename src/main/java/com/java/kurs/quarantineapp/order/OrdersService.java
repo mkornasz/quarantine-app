@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,7 +28,7 @@ public class OrdersService {
     }
 
     Order addNewOrder(Order newOrder) {
-        newOrder.setOrderDate(new Date());
+        newOrder.setOrderDate(LocalDateTime.now());
         newOrder.setStatus("Accepted");
         return repository.save(newOrder);
     }
