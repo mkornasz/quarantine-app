@@ -33,16 +33,23 @@ p {
 }
 
 
+
 .content-table {
     text-align: center;
     max-height: 300px;
     overflow: scroll;
     overflow-x: hidden;
     padding: 20px 0px;
+    border-top: 1px solid black;
 }
 .content-table table {
     border: 2px solid black;
     margin: 0 auto;
+    min-width: 80%;
+}
+
+.content-table th {
+    text-align: center;
 }
 /*
  * -- MODAL --
