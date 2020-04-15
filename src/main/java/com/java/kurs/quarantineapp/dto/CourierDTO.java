@@ -1,5 +1,6 @@
-package com.java.kurs.quarantineapp.courier;
+package com.java.kurs.quarantineapp.dto;
 
+import com.java.kurs.quarantineapp.model.Courier;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,14 +12,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourierDTO {
-    private Integer id;
+
     private Integer capacity;
     private String name;
     private String surname;
     private String phone;
 
-    CourierDTO(Courier c) {
-        this.id = c.getId();
+    public CourierDTO(Courier c) {
         this.capacity = c.getCapacity();
         this.name = c.getName();
         this.surname = c.getSurname();

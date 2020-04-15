@@ -1,6 +1,8 @@
-package com.java.kurs.quarantineapp.courier;
+package com.java.kurs.quarantineapp.service;
 
-import com.java.kurs.quarantineapp.order.Order;
+import com.java.kurs.quarantineapp.model.Courier;
+import com.java.kurs.quarantineapp.model.Order;
+import com.java.kurs.quarantineapp.repository.CourierRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;

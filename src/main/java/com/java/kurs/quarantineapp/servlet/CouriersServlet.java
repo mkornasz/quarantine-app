@@ -1,5 +1,8 @@
-package com.java.kurs.quarantineapp.courier;
+package com.java.kurs.quarantineapp.servlet;
 
+import com.java.kurs.quarantineapp.dto.CourierDTO;
+import com.java.kurs.quarantineapp.model.Courier;
+import com.java.kurs.quarantineapp.service.CouriersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -7,11 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/couriers")
-class CouriersServlet {
+public class CouriersServlet {
     private final Logger logger = LoggerFactory.getLogger(CouriersServlet.class);
 
     private CouriersService service;

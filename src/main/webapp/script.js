@@ -72,10 +72,9 @@ function addNewOrder(courierId) {
 }
 
 function addOrderToTable(order) {
-    var row = '<tr><td>' + order.id + '</td><td>' + order.clientName + '</td><td>'
-        + order.clientPhone + '</td><td>' + order.orderDate + '</td><td>'
-        + order.routeLength + '</td><td>' + order.deliveryDate + '</td><td>'
-        + order.courierId + '</td></tr>';
+    var row = '<tr><td>' + order.clientName + '</td><td>' + order.clientPhone
+        + '</td><td>' + order.orderDate + '</td><td>' + order.routeLength
+        + '</td><td>' + order.deliveryDate + '</td><td>' + order.courierId + '</td></tr>';
     document.getElementById("ordersTbody").innerHTML += row;
 }
 
@@ -83,9 +82,8 @@ function loadCouriersTable() {
     fetch(`${COURIERS_API_URL}`)
         .then(processOkResponse)
         .then(courierArr => courierArr.map(courier => {
-            var row = '<tr><td>' + courier.id + '</td><td>' + courier.name + '</td><td>'
-                + courier.surname + '</td><td>' + courier.phone + '</td><td>'
-                + courier.capacity + '</td></tr>';
+            var row = '<tr><td>' + courier.name + '</td><td>' + courier.surname
+                + '</td><td>' + courier.phone + '</td><td>' + courier.capacity + '</td></tr>';
             document.getElementById("couriersTbody").innerHTML += row;
         }));
 }

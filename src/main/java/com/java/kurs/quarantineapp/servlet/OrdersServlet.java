@@ -1,5 +1,8 @@
-package com.java.kurs.quarantineapp.order;
+package com.java.kurs.quarantineapp.servlet;
 
+import com.java.kurs.quarantineapp.dto.OrderDTO;
+import com.java.kurs.quarantineapp.model.Order;
+import com.java.kurs.quarantineapp.service.OrdersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
-class OrdersServlet {
+public class OrdersServlet {
     private final Logger logger = LoggerFactory.getLogger(OrdersServlet.class);
 
     private OrdersService service;
@@ -19,7 +22,7 @@ class OrdersServlet {
     }
 
     @GetMapping
-    ResponseEntity<List<Order>> findAllOrders() {
+    ResponseEntity<List<OrderDTO>> findAllOrders() {
         logger.info("Got findAllOrders request");
         return ResponseEntity.ok(service.findAllOrders());
     }

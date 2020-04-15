@@ -1,21 +1,20 @@
-package com.java.kurs.quarantineapp.order;
+package com.java.kurs.quarantineapp.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Entity
 @Table(name = "orders")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {

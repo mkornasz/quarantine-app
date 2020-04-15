@@ -1,5 +1,8 @@
-package com.java.kurs.quarantineapp.courier;
+package com.java.kurs.quarantineapp.service;
 
+import com.java.kurs.quarantineapp.model.Courier;
+import com.java.kurs.quarantineapp.dto.CourierDTO;
+import com.java.kurs.quarantineapp.repository.CourierRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,7 +27,7 @@ public class CouriersService {
     }
 
 
-    List<CourierDTO> findAllCouriers() {
+    public List<CourierDTO> findAllCouriers() {
         logger.info("Got findAllCouriers request");
         return repository
                 .findAll()
@@ -33,16 +36,16 @@ public class CouriersService {
                 .collect(toList());
     }
 
-    Long getCouriersCount() {
+    public Long getCouriersCount() {
         logger.info("Got getCouriersCount request");
         return repository.count();
     }
 
-    Courier addNewCourier(Courier courier) {
+    public Courier addNewCourier(Courier courier) {
         return repository.save(courier);
     }
 
-    Optional<Integer> assignCourier(LocalDate deliveryDate, Integer routeLength){
+    public Optional<Integer> assignCourier(LocalDate deliveryDate, Integer routeLength){
         Random rand = new Random();
         var couriersCapacity = repository.findAll();
         couriersCapacity.forEach(c->{

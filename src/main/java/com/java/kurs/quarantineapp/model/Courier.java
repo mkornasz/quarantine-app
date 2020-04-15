@@ -1,7 +1,7 @@
-package com.java.kurs.quarantineapp.courier;
+package com.java.kurs.quarantineapp.model;
 
-import com.java.kurs.quarantineapp.order.Order;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -11,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "couriers")
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
