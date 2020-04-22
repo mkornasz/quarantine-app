@@ -4,10 +4,9 @@ import com.java.kurs.quarantineapp.model.Courier;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
-import javax.persistence.*;
 
-@Table(name = "couriers")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,10 +17,7 @@ public class CourierDTO {
     private String surname;
     private String phone;
 
-    public CourierDTO(Courier c) {
-        this.capacity = c.getCapacity();
-        this.name = c.getName();
-        this.surname = c.getSurname();
-        this.phone = c.getPhone();
+    public CourierDTO(Courier courier) {
+        BeanUtils.copyProperties(courier, this);
     }
 }

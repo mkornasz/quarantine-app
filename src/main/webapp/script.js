@@ -19,16 +19,28 @@ window.onload=function(){
 }
 
 function submitOrder() {
-    const formObj = {
-        routeLength: document.getElementById('routeLength').value,
-        deliveryDate: document.getElementById('deliveryDate').value
-    };
-    fetch(`${COURIERS_API_URL}/maxCapacity?${new URLSearchParams(formObj)}`)
-        .then(processOkResponse)
-        .then(courierId => addNewOrder(courierId))
-        .catch(error => alert(error.message == '404' ? 'Chosen delivery date is not available. '
-            : 'SERVER ERROR'));
 
+        fetch(ORDERS_API_URL, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                routeLength: document.getElementById('routeLength').value,
+                deliveryDate: document.getElementById('deliveryDate').value,
+                clientName: document.getElementById('firstname').value,
+                clientSurname: document.getElementById('surname').value,
+                clientPhone: document.getElementById('phone').value
+            })})
+            .then(processOkResponse)
+            .then(o => {
+                addOrderToTable(o);
+                document.getElementById("modalWindow").style.display = "none";
+                document.getElementById("modalForm").reset();
+                initCounts();})
+            .catch(error => alert(error.message == '422' ?
+                'Chosen delivery date is not available. ' : 'SERVER ERROR'));
 }
 
 function initCounts() {
@@ -48,33 +60,11 @@ function initCounts() {
         });
 }
 
-function addNewOrder(courierId) {
-    fetch(ORDERS_API_URL, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            routeLength: document.getElementById('routeLength').value,
-            deliveryDate: document.getElementById('deliveryDate').value,
-            courierId: courierId,
-            clientName: document.getElementById('firstname').value + " " +
-                document.getElementById('surname').value,
-            clientPhone: document.getElementById('phone').value
-        })
-    }).then(processOkResponse).then(o => {
-        addOrderToTable(o);
-        document.getElementById("modalWindow").style.display = "none";
-        document.getElementById("modalForm").reset();
-        initCounts();
-    });
-}
 
 function addOrderToTable(order) {
-    var row = '<tr><td>' + order.clientName + '</td><td>' + order.clientPhone
-        + '</td><td>' + order.orderDate + '</td><td>' + order.routeLength
-        + '</td><td>' + order.deliveryDate + '</td><td>' + order.courierId + '</td></tr>';
+    var row = '<tr><td>' + order.clientName + '</td><td>' + order.clientSurname
+        + '</td><td>' + order.clientPhone + '</td><td>' + order.orderDate
+        + '</td><td>' + order.routeLength + '</td><td>' + order.deliveryDate + '</td></tr>';
     document.getElementById("ordersTbody").innerHTML += row;
 }
 
@@ -88,12 +78,12 @@ function loadCouriersTable() {
         }));
 }
 
-
 function loadOrdersTable() {
     fetch(`${ORDERS_API_URL}`)
         .then(processOkResponse)
         .then(orderArr => orderArr.map(o => addOrderToTable(o)));
 }
+
 
 function processOkResponse(response = {}) {
     if (response.ok) {

@@ -5,6 +5,7 @@ create table orders (
     delivery_date date,
     route_length int,
     client_name varchar(40),
+    client_surname varchar(40),
     client_phone varchar(40),
-    courier_id int
+    day_plan_id int
 );

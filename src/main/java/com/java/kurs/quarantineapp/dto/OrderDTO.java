@@ -4,6 +4,7 @@ import com.java.kurs.quarantineapp.model.Order;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,16 +18,10 @@ public class OrderDTO {
     private LocalDateTime orderDate;
     private LocalDate deliveryDate;
     private String clientName ;
+    private String clientSurname ;
     private String clientPhone;
-    private Integer courierId;
-
 
     public OrderDTO(Order order){
-        this.routeLength = order.getRouteLength();
-        this.orderDate = order.getOrderDate();
-        this.deliveryDate = order.getDeliveryDate();
-        this.clientName = order.getClientName();
-        this.clientPhone = order.getClientPhone();
-        this.courierId = order.getCourierId();
+        BeanUtils.copyProperties(order, this);
     }
 }
