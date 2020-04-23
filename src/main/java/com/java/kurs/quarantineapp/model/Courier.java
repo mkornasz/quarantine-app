@@ -32,13 +32,13 @@ public class Courier {
     @JoinColumn(name = "courierId")
     private List<DayPlan> dayPlans;
 
+    public Courier(CourierDTO courier) {
+        BeanUtils.copyProperties(courier, this);
+    }
+
     public Optional<DayPlan> getDayPlan(LocalDate day){
         return dayPlans.stream()
                 .filter(p->p.getDate().equals(day))
                 .findFirst();
-    }
-
-    public Courier(CourierDTO courier) {
-        BeanUtils.copyProperties(courier, this);
     }
 }

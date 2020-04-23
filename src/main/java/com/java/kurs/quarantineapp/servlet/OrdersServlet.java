@@ -1,7 +1,6 @@
 package com.java.kurs.quarantineapp.servlet;
 
 import com.java.kurs.quarantineapp.dto.OrderDTO;
-import com.java.kurs.quarantineapp.model.Order;
 import com.java.kurs.quarantineapp.service.OrdersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +34,9 @@ public class OrdersServlet {
 
 
     @PostMapping
-    ResponseEntity<Order> saveOrder(@RequestBody Order order) {
+    ResponseEntity<OrderDTO> saveOrder(@RequestBody OrderDTO order) {
         logger.info("Got saveOrder request");
-        return ResponseEntity.ok(service.addNewOrder(order));
+        return service.addNewOrder(order).map(ResponseEntity::ok).
+                orElse(ResponseEntity.unprocessableEntity().build());
     }
 }

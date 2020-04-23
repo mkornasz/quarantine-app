@@ -1,7 +1,8 @@
 package com.java.kurs.quarantineapp.servlet;
 
 import com.java.kurs.quarantineapp.dto.CourierDTO;
-import com.java.kurs.quarantineapp.model.Courier;
+import com.java.kurs.quarantineapp.dto.DayPlanDTO;
+import com.java.kurs.quarantineapp.model.DayPlan;
 import com.java.kurs.quarantineapp.service.CouriersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,21 +29,29 @@ public class CouriersServlet {
         return ResponseEntity.ok(service.findAllCouriers());
     }
 
-    @GetMapping("/maxCapacity")
-    ResponseEntity<Integer> findCourier(@RequestParam(value = "routeLength", required = true) Integer routeLength, @RequestParam(value = "deliveryDate", required = true) String deliveryDate) {
-        logger.info("Got maxCapacity?routeLength=" + routeLength + "&deliveryDate=" + deliveryDate + " for request");
-        var courier = service.assignCourier(LocalDate.parse(deliveryDate), routeLength);
-        return courier.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-    }
-
     @GetMapping("/count")
     ResponseEntity<Long> getCouriersCount() {
         logger.info("Got getCouriersCount request");
         return ResponseEntity.ok(service.getCouriersCount());
     }
 
+    @GetMapping("/{id}/dayPlan")
+    ResponseEntity<DayPlanDTO> findCourierDayPlan(@PathVariable Integer id, @RequestParam(value = "date", required = true) String date) {
+        logger.info("Got " + id + "/plan?&dayPlan=" + date + " for request");
+        var dayPlan = service.findCourierDayPlan(id, LocalDate.parse(date));
+        return dayPlan.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/plans")
+    ResponseEntity<List<DayPlanDTO>> findCourierDayPlan(@PathVariable Integer id) {
+        logger.info("Got " + id + "/plans for request");
+        return ResponseEntity.ok(service.findCourierPlans(id));
+    }
+
     @PostMapping
-    ResponseEntity<Courier> saveCourier(@RequestBody Courier Courier) {
-        return ResponseEntity.ok(service.addNewCourier(Courier));
+    ResponseEntity saveCourier(@RequestBody CourierDTO courier) {
+        logger.info("Got saveCourier request");
+        service.addNewCourier(courier);
+        return ResponseEntity.ok().build();
     }
 }

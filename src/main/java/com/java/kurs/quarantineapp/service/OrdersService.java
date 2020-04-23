@@ -5,10 +5,12 @@ import com.java.kurs.quarantineapp.model.Order;
 import com.java.kurs.quarantineapp.repository.OrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -17,6 +19,9 @@ public class OrdersService {
     private final Logger logger = LoggerFactory.getLogger(OrdersService.class);
 
     private OrderRepository repository;
+
+    @Autowired
+    private CouriersService courierService;
 
     OrdersService(OrderRepository repository) {
         this.repository = repository;
@@ -36,10 +41,19 @@ public class OrdersService {
         return repository.count();
     }
 
-    public Order addNewOrder(Order newOrder) {
-        newOrder.setOrderDate(LocalDateTime.now());
-        newOrder.setStatus("Accepted");
-        return repository.save(newOrder);
-    }
+    public Optional<OrderDTO> addNewOrder(OrderDTO orderDto) {
+        logger.info("Got addNewOrder request");
+        Order order = new Order(orderDto);
+        order.setOrderDate(LocalDateTime.now());
+        order.setStatus("Accepted");
 
+        var dayId = courierService.assignCourierDay(order.getDeliveryDate(), order.getRouteLength());
+
+        logger.info("For date " + order.getDeliveryDate() + " and route length " + order.getRouteLength()
+                + dayId.map(d -> " assigned dayPlan with id " + d).orElse(" there is no available day"));
+
+        if (dayId.isEmpty()) return Optional.empty();
+        order.setDayPlanId(dayId.get());
+        return Optional.of(new OrderDTO(repository.save(order)));
+    }
 }
