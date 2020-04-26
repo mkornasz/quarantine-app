@@ -1,10 +1,13 @@
 package com.java.kurs.quarantineapp.dto;
 
 import com.java.kurs.quarantineapp.model.Courier;
-import lombok.Getter;
+import lombok.*;
 
 
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CourierDTO {
 
     private Integer capacity;

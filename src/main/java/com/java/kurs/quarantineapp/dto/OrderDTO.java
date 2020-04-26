@@ -1,12 +1,15 @@
 package com.java.kurs.quarantineapp.dto;
 
 import com.java.kurs.quarantineapp.model.Order;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderDTO {
 
     private Integer routeLength;
