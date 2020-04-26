@@ -3,6 +3,7 @@ package com.java.kurs.quarantineapp.service;
 import com.java.kurs.quarantineapp.dto.CourierDTO;
 import com.java.kurs.quarantineapp.dto.DayPlanDTO;
 import com.java.kurs.quarantineapp.model.Courier;
+import com.java.kurs.quarantineapp.model.DayPlan;
 import com.java.kurs.quarantineapp.repository.CourierRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class CouriersService {
     }
 
     public void addNewCourier(CourierDTO courierDto) {
-        repository.save(new Courier(courierDto));
+        repository.save(transformDtoToCourier(courierDto));
     }
 
     public Optional<DayPlanDTO> findCourierDayPlan(Integer courierId, LocalDate day) {
@@ -62,20 +63,29 @@ public class CouriersService {
     }
 
     public Optional<Courier> findAvailableCourier(LocalDate deliveryDate, int routeLength) {
-        logger.info("Got findAvailableCourier request for route length " + routeLength + " and day " + deliveryDate);
         Random rand = new Random();
         var couriers = repository.findAll().stream().filter(c ->
                 (c.getDayPlan(deliveryDate).isPresent() ?
                         c.getDayPlan(deliveryDate).get().getRemainingCapacity() : c.getCapacity()) >= routeLength)
                 .collect(Collectors.toList());
 
+        logger.info("Find " + couriers.size() + " available couriers for route length " + routeLength + " and day " + deliveryDate);
         return couriers.size() == 0 ? Optional.empty() :
                 Optional.of(couriers.get(rand.nextInt(couriers.size())));
     }
 
-    public Optional<Integer> assignCourierDay(LocalDate deliveryDate, int routeLength) {
+    public Optional<DayPlan> assignCourierDay(LocalDate deliveryDate, int routeLength) {
         logger.info("Got assignCourierDay request for route length " + routeLength + " and day " + deliveryDate);
         return findAvailableCourier(deliveryDate, routeLength)
-                .map(c -> dayPlanService.updateCourierDayPlan(c, deliveryDate, routeLength).getId());
+                .map(c -> dayPlanService.updateCourierDayPlan(c, deliveryDate, routeLength));
+    }
+
+    private Courier transformDtoToCourier(CourierDTO courierDTO){
+        return new Courier().toBuilder()
+                .name(courierDTO.getName())
+                .surname(courierDTO.getSurname())
+                .phone(courierDTO.getPhone())
+                .capacity(courierDTO.getCapacity())
+                .build();
     }
 }

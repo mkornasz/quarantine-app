@@ -37,7 +37,7 @@ public class DayPlanService {
         logger.info("Got addNewDayPlan request for courier " + courier.getId() + " and day " + date);
         return repository.save(new DayPlan().toBuilder()
                 .date(date)
-                .courierId(courier.getId())
+                .courier(courier)
                 .remainingCapacity(courier.getCapacity())
                 .build());
     }

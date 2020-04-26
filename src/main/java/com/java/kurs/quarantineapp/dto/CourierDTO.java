@@ -1,15 +1,10 @@
 package com.java.kurs.quarantineapp.dto;
 
 import com.java.kurs.quarantineapp.model.Courier;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.BeanUtils;
+import lombok.Getter;
 
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
 public class CourierDTO {
 
     private Integer capacity;
@@ -18,6 +13,9 @@ public class CourierDTO {
     private String phone;
 
     public CourierDTO(Courier courier) {
-        BeanUtils.copyProperties(courier, this);
+        this.capacity = courier.getCapacity();
+        this.name = courier.getName();
+        this.surname = courier.getSurname();
+        this.phone = courier.getPhone();
     }
 }

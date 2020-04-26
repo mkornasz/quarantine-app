@@ -6,6 +6,7 @@ import com.java.kurs.quarantineapp.repository.CourierRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -20,22 +21,22 @@ import static org.mockito.Mockito.when;
 class CouriersServiceTests {
 
 
-    @MockBean(name = "courierRepository")
+    @MockBean
     private CourierRepository courierRepository;
 
     @InjectMocks
+    @Autowired
     private CouriersService couriersService;
 
     private Courier testCourier = Courier.builder().id(1).capacity(10).name("A").surname("B")
             .phone("48123456789").dayPlans(new ArrayList<>()).build();
-    private DayPlan testDayPlan = DayPlan.builder().id(1).courierId(1).date(LocalDate.now())
+    private DayPlan testDayPlan = DayPlan.builder().id(1).courier(testCourier).date(LocalDate.now())
             .remainingCapacity(5).build();
 
     @Test
     void returnRandomCourier() {
         when(courierRepository.findAll()).thenReturn(List.of(testCourier,
                 testCourier.toBuilder().id(2).build()));
-        couriersService = new CouriersService(courierRepository);
 
         var courier = couriersService.findAvailableCourier(LocalDate.now(), 5);
         Assertions.assertTrue(courier.isPresent());
@@ -45,7 +46,6 @@ class CouriersServiceTests {
     void returnAvailableCourier() {
         when(courierRepository.findAll()).thenReturn(List.of(testCourier.toBuilder()
                 .dayPlans(List.of(testDayPlan)).build(), testCourier.toBuilder().id(2).build()));
-        couriersService = new CouriersService(courierRepository);
 
         var courier = couriersService.findAvailableCourier(LocalDate.now(), 6);
         Assertions.assertTrue(courier.isPresent());
@@ -56,7 +56,6 @@ class CouriersServiceTests {
     void returnEmptyCourierForTooLongRoute() throws Exception {
         when(courierRepository.findAll()).thenReturn(List.of(testCourier,
                 testCourier.toBuilder().id(2).build()));
-        couriersService = new CouriersService(courierRepository);
 
         var courier = couriersService.findAvailableCourier(LocalDate.now(), 15);
         Assertions.assertEquals(Optional.empty(), courier);
@@ -64,11 +63,11 @@ class CouriersServiceTests {
 
     @Test
     void returnEmptyCourierForTakenCouriers() throws Exception {
+        var testCourier2 = testCourier.toBuilder().id(2).build();
+        var testDayPlan2 = testDayPlan.toBuilder().id(2).courier(testCourier2).build();
         when(courierRepository.findAll()).thenReturn(List.of(testCourier.toBuilder()
-                .dayPlans(List.of(testDayPlan)).build(), testCourier.toBuilder().id(2)
-                .dayPlans(List.of(testDayPlan.toBuilder().id(2).courierId(2).build())).build()));
-
-        couriersService = new CouriersService(courierRepository);
+                .dayPlans(List.of(testDayPlan)).build(),
+                testCourier2.toBuilder().dayPlans(List.of(testDayPlan2)).build()));
 
         var courier = couriersService.findAvailableCourier(LocalDate.now(), 6);
         Assertions.assertEquals(Optional.empty(), courier);
@@ -77,7 +76,6 @@ class CouriersServiceTests {
     @Test
     void returnEmptyCourierForEmptyRepo() throws Exception {
         when(courierRepository.findAll()).thenReturn(new ArrayList<>());
-        couriersService = new CouriersService(courierRepository);
 
         var courier = couriersService.findAvailableCourier(LocalDate.now(), 6);
         Assertions.assertEquals(Optional.empty(), courier);

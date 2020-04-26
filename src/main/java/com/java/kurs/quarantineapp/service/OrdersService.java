@@ -43,17 +43,27 @@ public class OrdersService {
 
     public Optional<OrderDTO> addNewOrder(OrderDTO orderDto) {
         logger.info("Got addNewOrder request");
-        Order order = new Order(orderDto);
-        order.setOrderDate(LocalDateTime.now());
-        order.setStatus("Accepted");
+        Order order = transformDtoToOrder(orderDto);
 
-        var dayId = courierService.assignCourierDay(order.getDeliveryDate(), order.getRouteLength());
+        var day = courierService.assignCourierDay(order.getDeliveryDate(), order.getRouteLength());
 
         logger.info("For date " + order.getDeliveryDate() + " and route length " + order.getRouteLength()
-                + dayId.map(d -> " assigned dayPlan with id " + d).orElse(" there is no available day"));
+                + day.map(d -> " assigned dayPlan with id " + d).orElse(" there is no available day"));
 
-        if (dayId.isEmpty()) return Optional.empty();
-        order.setDayPlanId(dayId.get());
+        if (day.isEmpty()) return Optional.empty();
+        order.setDayPlan(day.get());
         return Optional.of(new OrderDTO(repository.save(order)));
+    }
+
+    private Order transformDtoToOrder(OrderDTO orderDTO){
+        return new Order().toBuilder()
+                .clientName(orderDTO.getClientName())
+                .clientSurname(orderDTO.getClientSurname())
+                .clientPhone(orderDTO.getClientPhone())
+                .deliveryDate(orderDTO.getDeliveryDate())
+                .routeLength(orderDTO.getRouteLength())
+                .orderDate(LocalDateTime.now())
+                .status("Accepted")
+                .build();
     }
 }

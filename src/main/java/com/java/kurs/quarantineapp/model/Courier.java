@@ -1,12 +1,7 @@
 package com.java.kurs.quarantineapp.model;
 
-import com.java.kurs.quarantineapp.dto.CourierDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -16,7 +11,7 @@ import java.util.Optional;
 @Entity
 @Table(name = "couriers")
 @Builder(toBuilder=true)
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Courier {
@@ -28,13 +23,8 @@ public class Courier {
     private String name;
     private String surname;
     private String phone;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "courierId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "courier")
     private List<DayPlan> dayPlans;
-
-    public Courier(CourierDTO courier) {
-        BeanUtils.copyProperties(courier, this);
-    }
 
     public Optional<DayPlan> getDayPlan(LocalDate day){
         return dayPlans.stream()

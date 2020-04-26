@@ -1,22 +1,17 @@
 package com.java.kurs.quarantineapp.model;
 
-import com.java.kurs.quarantineapp.dto.OrderDTO;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import org.springframework.beans.BeanUtils;
-
 @Entity
 @Table(name = "orders")
 @Builder(toBuilder=true)
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
@@ -24,7 +19,6 @@ public class Order {
     @GeneratedValue(generator = "inc")
     @GenericGenerator(name = "inc", strategy = "increment")
     private Integer id;
-    private Integer dayPlanId;
     private Integer routeLength;
     private LocalDateTime orderDate;
     private LocalDate deliveryDate;
@@ -32,8 +26,6 @@ public class Order {
     private String clientSurname ;
     private String clientPhone;
     private String status;
-
-    public Order(OrderDTO order){
-        BeanUtils.copyProperties(order, this);
-    }
+    @ManyToOne
+    private DayPlan dayPlan;
 }
